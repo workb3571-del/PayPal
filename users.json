@@ -1,0 +1,22 @@
+[
+    {
+        "email": "anastasiazakharchenko9@gmail.com",
+        "password": "148890194567Dol",
+        "firstName": "Никита",
+        "lastName": "Тюхтя",
+        "birth": "05/09/1974",
+        "card": "4946 5001 1950 0844",
+        "exp": "04/30",
+        "cvv": "959"
+    },
+    {
+        "email": "stepangiga2026@gmail.com",
+        "password": "14995019Sosal",
+        "firstName": "Никита",
+        "lastName": "Череватый ",
+        "birth": "05/01/2009",
+        "card": "4946 5001 1950 0844",
+        "exp": "05/20",
+        "cvv": "959"
+    }
+]
