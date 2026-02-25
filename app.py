@@ -16,8 +16,14 @@ def init_db():
 
 # загрузить пользователей
 def load_users():
+    if not os.path.exists(DB_FILE):
+        return []
+
     with open(DB_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+        try:
+            return json.load(f)
+        except json.JSONDecodeError:
+            return []
 
 
 # сохранить пользователей
@@ -37,6 +43,12 @@ def index():
 def register():
 
     data = request.json
+
+    if not data:
+        return jsonify({
+            "status": "error",
+            "message": "Нет данных"
+        })
 
     email = data.get("email")
     password = data.get("password")
@@ -81,6 +93,12 @@ def register():
 def login():
 
     data = request.json
+
+    if not data:
+        return jsonify({
+            "status": "error",
+            "message": "Нет данных"
+        })
 
     email = data.get("email")
     password = data.get("password")
